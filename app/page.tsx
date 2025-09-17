@@ -238,7 +238,7 @@ export default function Home() {
                     <span className="text-2xl">💰</span>
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-4">For lav lejeindtægt ift. markedet</h3>
-                  <p className="text-gray-600">Suboptimal prissætning der ikke reflekterer den faktiske markedsværdi af dine lejemål</p>
+                  <p className="text-gray-600">Prissætning der ikke reflekterer den faktiske markedsværdi af dine lejemål</p>
                 </motion.div>
 
                 <motion.div
@@ -269,6 +269,65 @@ export default function Home() {
         </section>
 
         <Features />
+        
+        {/* Getting Started Section */}
+        <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="text-4xl md:text-5xl font-bold text-gray-800 mb-16"
+              >
+                Hvad skal der til for at komme igang?
+              </motion.h2>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="bg-white rounded-3xl p-8 md:p-12 shadow-xl"
+              >
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="text-left">
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+                      Det eneste vi skal bruge fra dig, er en lejeliste
+                    </h3>
+                    <div className="space-y-4 text-gray-600">
+                      <p>Vi analyserer lejelisten og kommer med forslag til lejeniveau. Vi besigter ejendommene og lejemålene.</p>
+                      <p><strong>Indenfor en uge</strong> kan alle boligerne være klar til at blive markedsført.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="text-left">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">
+                      Vi tager os af alt - hurtigt, nemt og uden opstartsproblemer
+                    </h4>
+                    <div className="space-y-4 text-gray-600">
+                      <p>Kommunikationen til evt. administrator tager vi os af, så onboarding bliver utrolig hurtig og simpel.</p>
+                      <p>Vi har prøvet det før, og noget som virker som en uoverskuelig proces, bliver <strong>ekstremt overskuelig</strong>.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="mt-8 pt-8 border-t border-gray-200"
+                >
+                  <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">✓ Ingen opstartsproblemer</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">✓ Hurtig onboarding</span>
+                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">✓ Professionel håndtering</span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+        
         <CaseStudy />
         <Footer />
       </main>

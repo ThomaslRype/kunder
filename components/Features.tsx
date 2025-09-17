@@ -27,7 +27,7 @@ const coreFeatures = [
     icon: Zap,
     title: "Effektivisering",
     description: "Strømlinede processer for maksimal effektivitet",
-    expandedText: "Vi har optimeret hver enkelt del af udlejningsprocessen for at sikre maksimal effektivitet. Fra den første kontakt til kontraktunderskrivelse - alt er gennemtænkt og streamlinet for at spare tid og ressourcer."
+    expandedText: "Vi har optimeret hver enkelt del af udlejningsprocessen for at sikre maksimal effektivitet. Fra den første kontakt til kontraktunderskrivelse - alt er gennemtænkt og strømlinet for at spare tid og ressourcer."
   },
   {
     icon: Shield,
@@ -93,7 +93,7 @@ export default function Features() {
             Hvad vi tilbyder
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Professionel udlejningsoptimering med konkrete resultater
+            Professionel udlejningsoptimering med imponerende resultater
           </p>
         </motion.div>
 
@@ -107,7 +107,7 @@ export default function Features() {
           <div className="text-center mb-12">
             <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Vores kernekompetencer</h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              De tre fundamentale piller i vores tilgang til udlejningsoptimering
+              Vores kernekompentencer skiller os ud fra mængden.
             </p>
           </div>
           

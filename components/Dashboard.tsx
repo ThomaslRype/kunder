@@ -123,7 +123,7 @@ export default function Dashboard() {
         >
           <div className="text-center mb-8">
             <h3 className="text-3xl font-bold text-gray-800 mb-4">Hvad vi tilbyder</h3>
-            <p className="text-lg text-gray-600">Professionel udlejningsoptimering med konkrete resultater</p>
+            <p className="text-lg text-gray-600">Professionel udlejningsoptimering med imponerende resultater</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">

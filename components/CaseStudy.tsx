@@ -8,7 +8,7 @@ import { TrendingUp, CheckCircle, Calendar, DollarSign, MapPin, Building } from 
 const cases = [
   {
     id: 1,
-    name: "PEHA",
+    name: "Case A",
     location: "Aalborg og Nørresundby",
     date: "10. september 2025",
     before: { tomgang: 10, tilUdlejning: 21 },
@@ -24,7 +24,7 @@ const cases = [
   },
   {
     id: 2,
-    name: "Tranders Høje",
+    name: "Case B",
     location: "Aalborg Øst",
     date: "10. september 2025",
     before: { tomgang: "Ukendt", tilUdlejning: "Ukendt" },
@@ -40,7 +40,7 @@ const cases = [
   },
   {
     id: 3,
-    name: "Krobi",
+    name: "Case C",
     location: "Aalborg og Nørresundby",
     date: "10. september 2025",
     before: { tomgang: 14, tilUdlejning: 150 },
@@ -51,8 +51,8 @@ const cases = [
   },
   {
     id: 4,
-    name: "Eternitten",
-    location: "Eternitten",
+    name: "Case D",
+    location: "Aalborg området",
     date: "10. september 2025",
     before: { tomgang: 13, tilUdlejning: 159 },
     after: { tomgang: 0, tilUdlejning: 159 },
@@ -62,7 +62,7 @@ const cases = [
   },
   {
     id: 5,
-    name: "John Ejendomme",
+    name: "Case E",
     location: "Aalborg C",
     date: "10. september 2025",
     before: { tomgang: 9, tilUdlejning: 150 },
@@ -73,7 +73,7 @@ const cases = [
   },
   {
     id: 6,
-    name: "Lykkebo",
+    name: "Case F",
     location: "Aalborg C",
     date: "10. september 2025",
     before: { tomgang: "Ukendt", tilUdlejning: "Ukendt" },
@@ -150,7 +150,7 @@ export default function CaseStudy() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-1 blur-lg select-none pointer-events-none">{caseItem.name}</h3>
+                    <h3 className="text-xl font-bold text-gray-800 mb-1">{caseItem.name}</h3>
                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
                       <MapPin className="w-4 h-4" />
                       <span>{caseItem.location}</span>
@@ -244,8 +244,8 @@ export default function CaseStudy() {
                     </div>
                   )}
 
-                  {/* Aktuel status for Tranders Høje */}
-                  {caseItem.name === "Tranders Høje" && (
+                  {/* Aktuel status for Case B */}
+                  {caseItem.name === "Case B" && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <div className="flex justify-between text-xs">
                         <span className="text-gray-600">Aktuel status:</span>
@@ -254,8 +254,8 @@ export default function CaseStudy() {
                     </div>
                   )}
 
-                {/* Special message for Lykkebo */}
-                {caseItem.name === "Lykkebo" && (
+                {/* Special message for Case F */}
+                {caseItem.name === "Case F" && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <div className="text-center">
                         <div className="text-xs text-gray-600 leading-relaxed">

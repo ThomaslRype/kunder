@@ -124,18 +124,12 @@ export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-center mt-8"
             >
-              <p className="text-gray-600 mb-4">
-                Kontakt os for at få adgang til disse værktøjer
+              <p className="text-gray-600 mb-2">
+                Få adgang til disse værktøjer når du udlejer gennem os
               </p>
-              <motion.a
-                href="tel:25400905"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                <BarChart3 className="w-5 h-5" />
-                Få adgang nu
-              </motion.a>
+              <p className="text-sm text-gray-500">
+                * Billederne viser kun demo-data - ikke faktiske tal
+              </p>
             </motion.div>
           </motion.div>
         </motion.div>
