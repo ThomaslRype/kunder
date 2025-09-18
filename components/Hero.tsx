@@ -157,7 +157,6 @@ export default function Hero() {
           >
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-gray-800 mb-2">Vores samarbejdspartnere</h3>
-              <p className="text-gray-600">Vi stolte partnere i udlejningsoptimering</p>
             </div>
 
             <div className="relative overflow-hidden">

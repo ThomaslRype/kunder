@@ -35,7 +35,6 @@ export default function ClientLogos() {
           className="text-center mb-12"
         >
           <h3 className="text-3xl font-bold text-gray-800 mb-4">Vores samarbejdspartnere</h3>
-          <p className="text-gray-600 text-lg">Vi stolte partnere i udlejningsoptimering</p>
         </motion.div>
 
         <div className="relative overflow-hidden">
