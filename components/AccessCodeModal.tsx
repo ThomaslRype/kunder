@@ -23,7 +23,7 @@ export default function AccessCodeModal({ isOpen, onClose, onSuccess }: AccessCo
     // Simuler API kald
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    if (code === 'Dmbolig2025') {
+    if (code === 'dmudlejning2025') {
       onSuccess()
     } else {
       setError('Forkert kode. Prøv igen.')

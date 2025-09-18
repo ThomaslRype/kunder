@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 
 // Simpel kode-beskyttet adgang
-const ACCESS_CODES = ['Dmbolig2025'] // Dette kan ændres til en mere sikker løsning
+const ACCESS_CODES = ['dmudlejning2025'] // Dette kan ændres til en mere sikker løsning
 
 export async function verifyAccessCode(code: string): Promise<boolean> {
   return ACCESS_CODES.includes(code)
