@@ -118,13 +118,6 @@ export default function CaseStudy() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center mb-8"
           >
-            <div className="text-sm text-gray-500 max-w-4xl mx-auto bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <p className="mb-2">
-                <strong>Om vores tomgangsberegning:</strong> Nogle lejemål står i tomgang for vores kunder. 
-                Vores tomgangsprocent bliver udregnet ud fra, at vi har 3 måneder + 7 dage fra en evt. opsigelse, 
-                før den går i tomgang ved os.
-              </p>
-            </div>
           </motion.div>
         </div>
 
@@ -222,10 +215,7 @@ export default function CaseStudy() {
                       </div>
                       <div className="text-center">
                         <div className="text-lg font-bold text-blue-600 mb-1">
-                          0% vs {((caseItem.details.konkurrent.tomgang / caseItem.details.konkurrent.total) * 100).toFixed(1)}% tomgang
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          Konkurrent: {caseItem.details.konkurrent.total} boliger • {caseItem.details.konkurrent.tomgang} i tomgang
+                          Lignende projekter i områet har mellem 5% og 27% tomgang
                         </div>
                       </div>
                     </div>
