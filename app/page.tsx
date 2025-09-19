@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import AccessCodeModal from '@/components/AccessCodeModal'
 import ContactModal from '@/components/ContactModal'
 import AnalysisModal from '@/components/AnalysisModal'
 import Hero from '@/components/Hero'
@@ -13,7 +12,7 @@ import Footer from '@/components/Footer'
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [showModal, setShowModal] = useState(false)
+  const [code, setCode] = useState('')
   const [showContactModal, setShowContactModal] = useState(false)
   const [showAnalysisModal, setShowAnalysisModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -27,10 +26,14 @@ export default function Home() {
     setIsLoading(false)
   }, [])
 
-  const handleAuthSuccess = () => {
-    localStorage.setItem('kunder_authenticated', 'true')
-    setIsAuthenticated(true)
-    setShowModal(false)
+  const handleAuthSuccess = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (code === 'dmudlejning2025') {
+      localStorage.setItem('kunder_authenticated', 'true')
+      setIsAuthenticated(true)
+    } else {
+      alert('Forkert adgangskode. Prøv igen.')
+    }
   }
 
   const handleLogout = () => {
@@ -52,77 +55,178 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0">
+      <div className="min-h-screen flex">
+        {/* Left Panel - Dark Theme */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gray-900 text-white p-12 flex-col justify-center">
           <motion.div
-            animate={{ 
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-              opacity: [0.1, 0.2, 0.1]
-            }}
-            transition={{ 
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute top-20 left-20 w-32 h-32 bg-gray-300/30 rounded-full blur-xl"
-          />
-          <motion.div
-            animate={{ 
-              scale: [1.2, 1, 1.2],
-              rotate: [360, 180, 0],
-              opacity: [0.1, 0.3, 0.1]
-            }}
-            transition={{ 
-              duration: 15,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute bottom-20 right-20 w-40 h-40 bg-gray-400/30 rounded-full blur-xl"
-          />
-        </div>
-
-        <div className="text-center z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-8"
+            className="max-w-lg mx-auto text-center"
           >
-            <h1 className="text-6xl md:text-8xl font-bold text-gray-800 mb-6">
-              <span className="bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                Kunder
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
-              Fremviser, effektiviserer og optimerer lejemål for investorer
-            </p>
-          </motion.div>
+            {/* Logo */}
+            <div className="mb-8 flex justify-center">
+              <div className="bg-gray-800 rounded-xl p-4 w-fit">
+                <Image
+                  src="/Logo-dmudlejning.png"
+                  alt="DM Udlejning Logo"
+                  width={120}
+                  height={60}
+                  className="h-8 w-auto"
+                />
+              </div>
+            </div>
 
-          <motion.button
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowModal(true)}
-            className="btn-primary text-xl px-8 py-4"
-          >
-            Få adgang til platformen
-          </motion.button>
+            {/* Main Heading */}
+            <h1 className="text-4xl font-bold mb-6">
+              Fremvisning<br />
+              Effektivisering<br />
+              Optimering
+            </h1>
+            
+            {/* Description */}
+            <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+              Vi hjælper ejendomsejere og investorer med at få udlejet deres lejemål - hurtigere og ekstremt effektivt. 
+              Resultat: <span className="text-white font-semibold">1.785 aktive lejemål</span> - 
+              <span className="text-2xl font-black text-white"> 0,22% tomgang!</span>
+            </p>
+
+            {/* Features Grid */}
+            <div className="grid grid-cols-2 gap-6 mb-8 justify-items-center">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">📸</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Markedsføring</h3>
+                  <p className="text-gray-400 text-xs">Billeder og video</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">👥</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Stor kundegruppe</h3>
+                  <p className="text-gray-400 text-xs">På sociale medier og lejekartotek</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">🏠</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Fremvisning</h3>
+                  <p className="text-gray-400 text-xs">Professionel præsentation af dine lejemål</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">⚡</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Effektivisering</h3>
+                  <p className="text-gray-400 text-xs">Strømlinede processer for maksimal effektivitet</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">📊</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Optimering</h3>
+                  <p className="text-gray-400 text-xs">Data-drevet optimering af lejemål</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">🎯</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Resultater</h3>
+                  <p className="text-gray-400 text-xs">1.785 aktive lejemål - 0,22% tomgang</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Status */}
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-300">Aktiv system - Altid opdateret</span>
+            </div>
+          </motion.div>
         </div>
 
-        <AccessCodeModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSuccess={handleAuthSuccess}
-        />
-        
-        <ContactModal
-          isOpen={showContactModal}
-          onClose={() => setShowContactModal(false)}
-        />
+        {/* Right Panel - Light Theme - Login Form */}
+        <div className="w-full lg:w-1/2 bg-gray-50 flex items-center justify-center p-8 lg:p-16">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="w-full max-w-sm mx-auto px-8"
+          >
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">Hop ind og kig</h2>
+              <p className="text-gray-600 text-base">Brug kodeordet vi sendte i mailen</p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-lg mx-auto">
+              <form onSubmit={handleAuthSuccess} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Adgangskode
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="Indtast adgangskode"
+                      className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 text-lg"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-gray-800 hover:bg-gray-900 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] flex items-center justify-center space-x-2 text-lg"
+                >
+                  <span>Log ind</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <p className="text-xs text-gray-500">
+                  Sikker login med 256-bit SSL kryptering
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Har du problemer med at logge ind, kontakt os på <span className="font-semibold text-gray-800">25 40 09 05</span>
+              </p>
+            </div>
+          </motion.div>
+        </div>
       </div>
     )
   }
@@ -169,7 +273,7 @@ export default function Home() {
                 }}
                 className="btn-secondary text-sm whitespace-nowrap"
               >
-                Analysværktøj
+                Ejendomssystem
               </motion.button>
               
               <motion.button
@@ -179,7 +283,7 @@ export default function Home() {
                   console.log('Contact button clicked')
                   setShowContactModal(true)
                 }}
-                className="btn-secondary"
+                className="btn-secondary text-sm"
               >
                 Gratis vurdering af portefølje
               </motion.button>

@@ -65,7 +65,7 @@ export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
             {/* Header */}
             <div className="text-center mb-8">
               <h3 className="text-3xl font-bold text-gray-800 mb-4">
-                Analysværktøj du får adgang til
+                Ejendomssystem du får adgang til
               </h3>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Få adgang til vores avancerede analysværktøjer for at optimere din udlejningsportefølje
