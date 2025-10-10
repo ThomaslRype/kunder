@@ -71,17 +71,6 @@ const cases = [
     period: "Siden Q3 2024",
     highlight: "0% tomgang opnået"
   },
-  {
-    id: 6,
-    name: "Case F",
-    location: "Aalborg C",
-    date: "10. september 2025",
-    before: { tomgang: "Ukendt", tilUdlejning: "Ukendt" },
-    after: { tomgang: 0.44, tilUdlejning: 900 },
-    meromsætning: 0,
-    period: "Siden Q2 2023",
-    highlight: "77 dages udlejningshastighed på sværeste lejemål"
-  }
 ]
 
 export default function CaseStudy() {
@@ -244,16 +233,6 @@ export default function CaseStudy() {
                     </div>
                   )}
 
-                {/* Special message for Case F */}
-                {caseItem.name === "Case F" && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <div className="text-center">
-                        <div className="text-xs text-gray-600 leading-relaxed">
-                          Vi står for de lejemål, de ikke har haft succes med at udleje
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </motion.div>
