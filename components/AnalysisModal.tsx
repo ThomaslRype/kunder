@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, BarChart3, TrendingUp, PieChart } from 'lucide-react'
+import { X, BarChart3, TrendingUp, PieChart, Lock } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface AnalysisModalProps {
   isOpen: boolean
@@ -12,6 +13,10 @@ interface AnalysisModalProps {
 
 export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [showAccessForm, setShowAccessForm] = useState(false)
+  const [accessCode, setAccessCode] = useState('')
+  const [isValidating, setIsValidating] = useState(false)
+  const router = useRouter()
   
   console.log('AnalysisModal isOpen:', isOpen)
 
@@ -35,6 +40,26 @@ export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
       icon: PieChart
     }
   ]
+
+  const handleAccessSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsValidating(true)
+    
+    // Simulate validation delay
+    setTimeout(() => {
+      if (accessCode === 'Lykkebo2025') {
+        // Store access in localStorage
+        localStorage.setItem('analysis_access', 'true')
+        // Navigate to analysis page
+        router.push('/analyse')
+        onClose()
+      } else {
+        alert('Forkert adgangskode. Prøv igen.')
+        setAccessCode('')
+      }
+      setIsValidating(false)
+    }, 1000)
+  }
 
   return (
     <AnimatePresence>
@@ -72,8 +97,11 @@ export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
               </p>
             </div>
 
-            {/* Images Grid */}
-            <div className="grid md:grid-cols-3 gap-8">
+            {/* Access Form or Preview Grid */}
+            {!showAccessForm ? (
+              <>
+                {/* Preview Images Grid */}
+                <div className="grid md:grid-cols-3 gap-8 mb-8">
               {analysisTools.map((tool, index) => (
                 <motion.div
                   key={tool.title}
@@ -124,13 +152,81 @@ export default function AnalysisModal({ isOpen, onClose }: AnalysisModalProps) {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-center mt-8"
             >
-              <p className="text-gray-600 mb-2">
-                Få adgang til disse værktøjer når du udlejer gennem os
-              </p>
-              <p className="text-sm text-gray-500">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowAccessForm(true)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-3 mx-auto"
+              >
+                <Lock className="w-5 h-5" />
+                <span>Gå til analyse</span>
+              </motion.button>
+              <p className="text-sm text-gray-500 mt-4">
                 * Billederne viser kun demo-data - ikke faktiske tal
               </p>
             </motion.div>
+            </>
+            ) : (
+              /* Access Code Form */
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-md mx-auto"
+              >
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Lock className="w-8 h-8 text-white" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 mb-2">
+                    Adgang til analyse
+                  </h4>
+                  <p className="text-gray-600">
+                    Indtast adgangskoden for at få adgang til analyseværktøjerne
+                  </p>
+                </div>
+
+                <form onSubmit={handleAccessSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Adgangskode
+                    </label>
+                    <input
+                      type="password"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value)}
+                      placeholder="Indtast adgangskode"
+                      className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowAccessForm(false)}
+                      className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-xl transition-colors duration-200"
+                    >
+                      Tilbage
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isValidating}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2"
+                    >
+                      {isValidating ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Validerer...</span>
+                        </>
+                      ) : (
+                        <span>Gå til analyse</span>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       )}
