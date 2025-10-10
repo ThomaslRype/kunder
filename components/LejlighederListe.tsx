@@ -60,45 +60,58 @@ export default function LejlighederListe() {
     let totalOldPrice = 0
     let totalNewPrice = 0
     let propertiesWithNewPrice = 0
+    let totalDifference = 0
 
     console.log('🔍 Available columns:', Object.keys(data[0] || {}))
 
     data.forEach((row, index) => {
-      // Try multiple column name variations
-      const oldPrice = parseFloat(row['Rå leje'] || row['rå leje'] || row['Ra leje'] || row['Rå Leje'] || row['Månedlig leje'] || row['månedlig leje'] || 0)
+      // Try multiple column name variations for RÅLEJE
+      const råleje = parseFloat(row['RÅLEJE'] || row['råleje'] || row['Råleje'] || row['Rå leje'] || row['rå leje'] || row['Ra leje'] || row['Rå Leje'] || row['Månedlig leje'] || row['månedlig leje'] || 0)
       const newPrice = parseFloat(row['Ny pris'] || row['ny pris'] || row['Ny Pris'] || row['Ny Pris'] || 0)
+      const forskel = parseFloat(row['FORSKEL'] || row['forskel'] || row['Forskel'] || 0)
       
-      if (index < 3) { // Debug first 3 rows
+      if (index < 5) { // Debug first 5 rows
         console.log(`Row ${index}:`, {
           allColumns: Object.keys(row),
-          oldPriceValue: row['Rå leje'] || row['rå leje'] || row['Ra leje'] || row['Rå Leje'] || row['Månedlig leje'] || row['månedlig leje'],
+          rålejeValue: row['RÅLEJE'] || row['råleje'] || row['Råleje'] || row['Rå leje'] || row['rå leje'] || row['Ra leje'] || row['Rå Leje'] || row['Månedlig leje'] || row['månedlig leje'],
           newPriceValue: row['Ny pris'] || row['ny pris'] || row['Ny Pris'],
-          parsedOldPrice: oldPrice,
-          parsedNewPrice: newPrice
+          forskelValue: row['FORSKEL'] || row['forskel'] || row['Forskel'],
+          parsedRåleje: råleje,
+          parsedNewPrice: newPrice,
+          parsedForskel: forskel
         })
       }
       
-      if (newPrice > 0) {
-        totalOldPrice += oldPrice
+      // Always add to totals if both prices exist
+      if (råleje > 0 && newPrice > 0) {
+        totalOldPrice += råleje
         totalNewPrice += newPrice
         propertiesWithNewPrice++
-        console.log(`💰 Property ${index}: Old=${oldPrice}, New=${newPrice}`)
+        
+        // Use the FORSKEL column directly if it exists
+        if (forskel !== 0) {
+          totalDifference += forskel
+          console.log(`💰 Property ${index}: Råleje=${råleje}, New=${newPrice}, FORSKEL=${forskel}`)
+        } else {
+          // Fallback to calculation if FORSKEL column is empty
+          const individualDifference = newPrice - råleje
+          totalDifference += individualDifference
+          console.log(`💰 Property ${index}: Råleje=${råleje}, New=${newPrice}, CalcDiff=${individualDifference}`)
+        }
       }
     })
-
-    const difference = totalNewPrice - totalOldPrice
 
     console.log('💰 Final Price comparison:', {
       totalOldPrice,
       totalNewPrice,
-      difference,
+      totalDifference,
       propertiesWithNewPrice
     })
 
     setPriceComparison({
       totalOldPrice,
       totalNewPrice,
-      difference,
+      difference: totalDifference,
       propertiesWithNewPrice
     })
   }
@@ -108,7 +121,7 @@ export default function LejlighederListe() {
       setIsLoading(true)
       console.log('📁 Loading Excel data for lejligheder...')
       
-      const response = await fetch('/Lykkebo analyse  - ny til møde.xlsx')
+      const response = await fetch('/Lykkebo analyse - ny til møde1.xlsx')
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }

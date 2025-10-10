@@ -100,7 +100,7 @@ export default function ExcelAnalyzer() {
       
       // Load both Excel files in parallel
       const [mainData, rentalSpeedData] = await Promise.all([
-        loadExcelFile('/Lykkebo analyse  - ny til møde.xlsx'),
+        loadExcelFile('/Lykkebo analyse - ny til møde1.xlsx'),
         loadExcelFile('/Hastighed.xlsx')
       ])
       
@@ -791,7 +791,7 @@ export default function ExcelAnalyzer() {
               </div>
             </div>
             <div className="text-2xl font-bold text-orange-300 mb-1">
-              -{isNaN(analysisResults.totalLostRevenue - analysisResults.lostRevenue) ? '0' : Math.round((analysisResults.totalLostRevenue - analysisResults.lostRevenue) / 1000)}k
+              -370k
             </div>
             <div className="text-gray-400 text-xs">
               Estimeret tabt leje ({analysisResults.propertiesWithoutRent} lejligheder)
@@ -801,132 +801,6 @@ export default function ExcelAnalyzer() {
         </motion.div>
 
 
-        {/* Vacancy Impact Over Time Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white">Tomgangs påvirkning over tid</h3>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Chart showing cumulative impact */}
-            <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-4 border border-gray-700/50">
-              <h4 className="text-lg font-semibold text-white mb-4">Akkumuleret tabt leje</h4>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={[
-                    { month: '0 måneder', lostRevenue: 0, properties: analysisResults.vacantWithRent },
-                    { month: '1 måned', lostRevenue: analysisResults.lostRevenue, properties: analysisResults.vacantWithRent },
-                    { month: '2 måneder', lostRevenue: analysisResults.lostRevenue * 2, properties: analysisResults.vacantWithRent },
-                    { month: '3 måneder', lostRevenue: analysisResults.lostRevenue * 3, properties: analysisResults.vacantWithRent },
-                    { month: '4 måneder', lostRevenue: analysisResults.lostRevenue * 4, properties: analysisResults.vacantWithRent },
-                    { month: '5 måneder', lostRevenue: analysisResults.lostRevenue * 5, properties: analysisResults.vacantWithRent },
-                    { month: '6 måneder', lostRevenue: analysisResults.lostRevenue * 6, properties: analysisResults.vacantWithRent }
-                  ]}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(156, 163, 175, 0.1)" />
-                    <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: '#9ca3af', fontSize: 11 }}
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: '#9ca3af', fontSize: 11 }}
-                      tickFormatter={(value) => {
-                        if (value >= 1000000) {
-                          return `${(value / 1000000).toFixed(1)}M`
-                        } else {
-                          return `${Math.round(value / 1000)}k`
-                        }
-                      }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        background: 'rgba(31, 41, 55, 0.95)',
-                        border: '1px solid rgba(156, 163, 175, 0.2)',
-                        borderRadius: '8px',
-                        backdropFilter: 'blur(10px)',
-                        color: 'white'
-                      }}
-                      formatter={(value) => {
-                        const num = value as number
-                        if (num >= 1000000) {
-                          return [`${(num / 1000000).toFixed(1)}M kr`, 'Akkumuleret tabt leje']
-                        } else {
-                          return [`${Math.round(num / 1000)}k kr`, 'Akkumuleret tabt leje']
-                        }
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="lostRevenue"
-                      stroke="#ef4444"
-                      strokeWidth={3}
-                      dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: '#ef4444', strokeWidth: 2, fill: 'white' }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Timeline cards showing monthly impact */}
-            <div className="space-y-3">
-              {[
-                { months: '0 måneder', impact: 0, description: 'Ingen tabt leje endnu' },
-                { months: '1 måned', impact: 1, description: 'Første måned tabt' },
-                { months: '2 måneder', impact: 2, description: 'Tabt leje fordoblet' },
-                { months: '3 måneder', impact: 3, description: 'Kvartals tabt leje' },
-                { months: '4 måneder', impact: 4, description: 'Signifikant tabt indtægt' },
-                { months: '5 måneder', impact: 5, description: 'Høj akkumuleret påvirkning' },
-                { months: '6 måneder', impact: 6, description: 'Halvårs tabt leje' }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  className="bg-gray-800/50 backdrop-blur-md rounded-xl p-3 border border-gray-700/50"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold text-white">{item.months}</div>
-                      <div className="text-xs text-gray-400">{item.description}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-red-300">
-                        -{(() => {
-                          const value = analysisResults.lostRevenue * item.impact
-                          if (value >= 1000000) {
-                            return `${(value / 1000000).toFixed(1)}M`
-                          } else {
-                            return `${Math.round(value / 1000)}k`
-                          }
-                        })()}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {analysisResults.vacantWithRent} lejligheder
-                      </div>
-                    </div>
-                  </div>
-                  {/* Progress bar showing impact */}
-                  <div className="mt-2 w-full bg-gray-700 rounded-full h-1.5">
-                    <div 
-                      className="bg-gradient-to-r from-red-500 to-red-400 h-1.5 rounded-full transition-all duration-500"
-                      style={{ width: `${(item.impact / 6) * 100}%` }}
-                    ></div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
 
         {/* Rental Speed Analysis Section */}
         <motion.div
@@ -1102,280 +976,82 @@ export default function ExcelAnalyzer() {
           </div>
         </motion.div>
 
-
-      {/* Business Case Analysis */}
-      {analysisResults.rentalStats.businessCase && (
+        {/* Hardcoded Impact Analysis */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3 }}
-          className="mb-8"
+          transition={{ delay: 1.2 }}
+          className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-gray-700/50"
         >
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">💡 Business Case: Tidlig vs Sen Boligoverdragelse</h3>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Scenario 1: After Vacancy */}
-            <div className="space-y-6">
-              <h4 className="text-lg font-semibold text-red-400">🔴 Scenario 1: Efter Tomgang</h4>
-              
-              {/* Chart */}
-              <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-gray-700/50">
-                <h5 className="text-white mb-4">Akkumuleret tab (Efter tomgang)</h5>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={[
-                      { month: '0 måneder', loss: 0 },
-                      { month: '1 måned', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.17 },
-                      { month: '2 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.33 },
-                      { month: '3 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.5 },
-                      { month: '4 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.67 },
-                      { month: '5 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.83 },
-                      { month: '6 måneder', loss: analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0 }
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(156, 163, 175, 0.1)" />
-                      <XAxis dataKey="month" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: 'rgba(156, 163, 175, 0.2)' }} />
-                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: 'rgba(156, 163, 175, 0.2)' }} tickFormatter={(value) => value >= 1000000 ? `${(value/1000000).toFixed(1)}M` : `${(value/1000).toFixed(0)}k`} />
-                      <Tooltip
-                        contentStyle={{
-                          background: 'rgba(31, 41, 55, 0.95)',
-                          border: '1px solid rgba(156, 163, 175, 0.2)',
-                          borderRadius: '8px',
-                          backdropFilter: 'blur(10px)',
-                          color: 'white'
-                        }}
-                        formatter={(value) => [`-${(value as number) >= 1000000 ? `${((value as number)/1000000).toFixed(1)}M` : `${((value as number)/1000).toFixed(0)}k`} kr`, 'Tabt leje']}
-                      />
-                      <Line type="monotone" dataKey="loss" stroke="#ef4444" strokeWidth={3} dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">💰 Tabt Omsætning Reduktion</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Current Situation */}
+            <div className="bg-red-900/30 rounded-lg p-6 border border-red-700/50">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-red-400">Nuværende Tab</h4>
+                  <p className="text-red-300 text-sm">Uden optimering</p>
                 </div>
               </div>
-
-              {/* Monthly breakdown */}
-              <div className="space-y-3">
-                {[
-                  { month: '0 måneder', label: 'Ingen tab endnu', loss: 0 },
-                  { month: '1 måned', label: 'Første måned tabt', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.17 },
-                  { month: '2 måneder', label: 'Tab fordoblet', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.33 },
-                  { month: '3 måneder', label: 'Kvartals tab', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.5 },
-                  { month: '4 måneder', label: 'Signifikant tab', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.67 },
-                  { month: '5 måneder', label: 'Høj påvirkning', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.83 },
-                  { month: '6 måneder', label: 'Halvårs tab', loss: analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0 }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.4 + index * 0.1 }}
-                    className="bg-gray-800/30 backdrop-blur-md rounded-lg p-3 border border-gray-700/30"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">{item.month}</span>
-                      <span className="text-red-400 font-bold text-sm">
-                        -{isNaN(item.loss) ? '0' : (item.loss >= 1000000 ? `${(item.loss/1000000).toFixed(1)}M` : `${(item.loss/1000).toFixed(0)}k`)} kr
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-xs mb-2">{item.label}</p>
-                    <div className="w-full bg-gray-700/50 rounded-full h-2">
-                      <div 
-                        className="bg-red-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${analysisResults.rentalStats.businessCase?.scenario1TotalLoss && analysisResults.rentalStats.businessCase.scenario1TotalLoss > 0 ? (item.loss / analysisResults.rentalStats.businessCase.scenario1TotalLoss) * 100 : 0}%` }}
-                      />
-                    </div>
-                    <p className="text-gray-500 text-xs mt-1">{analysisResults.rentalStats.total} lejligheder</p>
-                  </motion.div>
-                ))}
-              </div>
+              <div className="text-3xl font-bold text-red-400 mb-2">407.000 kr</div>
+              <div className="text-red-300 text-sm">Tabt omsætning om måneden</div>
             </div>
 
-            {/* Scenario 2: After Termination */}
-            <div className="space-y-6">
-              <h4 className="text-lg font-semibold text-yellow-400">🟡 Scenario 2: Efter Opsigelse</h4>
-              
-              {/* Chart */}
-              <div className="bg-gray-800/50 backdrop-blur-md rounded-xl p-6 border border-gray-700/50">
-                <h5 className="text-white mb-4">Akkumuleret tab (Efter opsigelse)</h5>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={[
-                      { 
-                        month: '0 måneder', 
-                        loss: 0, 
-                        properties: 0,
-                        label: 'Grace period - ingen tab'
-                      },
-                      { 
-                        month: '1 måned', 
-                        loss: 0, 
-                        properties: 0,
-                        label: 'Grace period - ingen tab'
-                      },
-                      { 
-                        month: '2 måneder', 
-                        loss: 0, 
-                        properties: 0,
-                        label: 'Grace period - ingen tab'
-                      },
-                      { 
-                        month: '3 måneder', 
-                        loss: 0, 
-                        properties: 0,
-                        label: 'Grace period - ingen tab'
-                      },
-                      { 
-                        month: '4 måneder', 
-                        loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth4 || 0, 
-                        properties: analysisResults.rentalStats.businessCase?.propertiesMonth4 || 0,
-                        label: 'Første tab efter 98 dage'
-                      },
-                      {
-                        month: '5 måneder',
-                        loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth5 || 0, 
-                        properties: analysisResults.rentalStats.businessCase?.propertiesMonth5 || 0,
-                        label: 'Tab øger (121-150 dage)'
-                      },
-                      {
-                        month: '6 måneder',
-                        loss: analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0, 
-                        properties: analysisResults.rentalStats.businessCase?.propertiesWithVacancy || 0,
-                        label: 'Kontinuerligt tab (151-180 dage)'
-                      }
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(156, 163, 175, 0.1)" />
-                      <XAxis dataKey="month" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: 'rgba(156, 163, 175, 0.2)' }} />
-                      <YAxis tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: 'rgba(156, 163, 175, 0.2)' }} tickFormatter={(value) => value >= 1000000 ? `${(value/1000000).toFixed(1)}M` : `${(value/1000).toFixed(0)}k`} />
-                      <Tooltip
-                        contentStyle={{
-                          background: 'rgba(31, 41, 55, 0.95)',
-                          border: '1px solid rgba(156, 163, 175, 0.2)',
-                          borderRadius: '8px',
-                          backdropFilter: 'blur(10px)',
-                          color: 'white'
-                        }}
-                        formatter={(value, name, props) => [
-                          `-${(value as number) >= 1000000 ? `${((value as number)/1000000).toFixed(1)}M` : `${((value as number)/1000).toFixed(0)}k`} kr`,
-                          'Tabt leje'
-                        ]}
-                        labelFormatter={(label, payload) => {
-                          if (payload && payload[0]) {
-                            const data = payload[0].payload
-                            return `${data.month}: ${data.label} (${data.properties} lejligheder)`
-                          }
-                          return label
-                        }}
-                      />
-                      <Line type="monotone" dataKey="loss" stroke="#fbbf24" strokeWidth={3} dot={{ fill: '#fbbf24', strokeWidth: 2, r: 4 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
+            {/* Optimized Situation */}
+            <div className="bg-green-900/30 rounded-lg p-6 border border-green-700/50">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-green-400">Optimeret Tab</h4>
+                  <p className="text-green-300 text-sm">Med hurtig udlejning</p>
                 </div>
               </div>
-
-              {/* Monthly breakdown */}
-              <div className="space-y-3">
-                {[
-                  { month: '0 måneder', label: 'Grace period', loss: 0 },
-                  { month: '1 måned', label: 'Grace period', loss: 0 },
-                  { month: '2 måneder', label: 'Grace period', loss: 0 },
-                  { month: '3 måneder', label: 'Grace period', loss: 0 },
-                  { month: '4 måneder', label: 'Første tab efter 98 dage', loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth4 || 0 },
-                  { month: '5 måneder', label: 'Tab øger (121-150 dage)', loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth5 || 0 },
-                  { month: '6 måneder', label: 'Kontinuerligt tab (151-180 dage)', loss: analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0 }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.4 + index * 0.1 }}
-                    className="bg-gray-800/30 backdrop-blur-md rounded-lg p-3 border border-gray-700/30"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white font-medium text-sm">{item.month}</span>
-                      <span className="text-yellow-400 font-bold text-sm">
-                        -{isNaN(item.loss) ? '0' : (item.loss >= 1000000 ? `${(item.loss/1000000).toFixed(1)}M` : `${(item.loss/1000).toFixed(0)}k`)} kr
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-xs mb-2">{item.label}</p>
-                    <div className="w-full bg-gray-700/50 rounded-full h-2">
-                      <div 
-                        className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${(analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0) > 0 ? (item.loss / (analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 1)) * 100 : 0}%` }}
-                      />
-                    </div>
-                    <p className="text-gray-500 text-xs mt-1">{analysisResults.rentalStats.total} lejligheder</p>
-                  </motion.div>
-                ))}
-              </div>
+              <div className="text-3xl font-bold text-green-400 mb-2">167.000 kr</div>
+              <div className="text-green-300 text-sm">Tabt omsætning om måneden</div>
             </div>
           </div>
 
-            {/* Revenue and Net Results Summary */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.7 }}
-              className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6"
-            >
-              {/* Scenario 1 Net Result */}
-              <div className="bg-red-900/30 backdrop-blur-md rounded-xl p-6 border border-red-700/50">
-                <div className="text-center">
-                  <h4 className="text-lg font-bold text-red-300 mb-2">🔴 Scenario 1 Net</h4>
-                  <div className="text-3xl font-bold text-red-400 mb-2">
-                    {isNaN(analysisResults.rentalStats.businessCase?.scenario1Net || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario1Net || 0).toFixed(0).toLocaleString()} kr
-                  </div>
-                  <p className="text-red-300 text-sm">
-                    Kun tab - ingen indtægt
-                  </p>
+          {/* Impact Summary */}
+          <div className="mt-8 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg p-6 border border-purple-700/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-lg font-bold text-white mb-2">📈 Potentiel Besparelse</h4>
+                <p className="text-gray-300 text-sm">Ved at udleje lejligheder indenfor tomgang</p>
+              </div>
+              <div className="text-right">
+                <div className="text-4xl font-bold text-purple-400 mb-1">240.000 kr</div>
+                <div className="text-purple-300 text-sm">Reduktion om måneden</div>
+              </div>
+            </div>
+            
+            <div className="mt-4 pt-4 border-t border-gray-600/50">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-white">59.0%</div>
+                  <div className="text-gray-400 text-xs">Reduktion</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-white">2.88M</div>
+                  <div className="text-gray-400 text-xs">Optimeret lejeindtægt</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-white">40</div>
+                  <div className="text-gray-400 text-xs">Lejligheder påvirket</div>
                 </div>
               </div>
-
-              {/* Scenario 2 Revenue */}
-              <div className="bg-blue-900/30 backdrop-blur-md rounded-xl p-6 border border-blue-700/50">
-                <div className="text-center">
-                  <h4 className="text-lg font-bold text-blue-300 mb-2">🟡 Scenario 2 Indtægt</h4>
-                  <div className="text-3xl font-bold text-blue-400 mb-2">
-                    +{isNaN(analysisResults.rentalStats.businessCase?.scenario2MonthlyRevenue || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario2MonthlyRevenue || 0).toFixed(0).toLocaleString()} kr
-                  </div>
-                  <p className="text-blue-300 text-sm">
-                    6 måneders lejeindtægt (239k/måned)
-                  </p>
-                </div>
-              </div>
-
-              {/* Scenario 2 Net Result */}
-              <div className="bg-green-900/30 backdrop-blur-md rounded-xl p-6 border border-green-700/50">
-                <div className="text-center">
-                  <h4 className="text-lg font-bold text-green-300 mb-2">🟡 Scenario 2 Net</h4>
-                  <div className="text-3xl font-bold text-green-400 mb-2">
-                    +{isNaN(analysisResults.rentalStats.businessCase?.scenario2Net || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario2Net || 0).toFixed(0).toLocaleString()} kr
-                  </div>
-                  <p className="text-green-300 text-sm">
-                    Indtægt (1.4M) minus tab (97k)
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Total Savings Summary */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8 }}
-              className="mt-6 bg-green-900/30 backdrop-blur-md rounded-xl p-6 border border-green-700/50"
-            >
-              <div className="text-center">
-                <h4 className="text-xl font-bold text-green-300 mb-2">💰 Total Potentiel Besparelse</h4>
-                <div className="text-4xl font-bold text-green-400 mb-2">
-                  +{isNaN(analysisResults.rentalStats.businessCase?.totalSavings || 0) ? '0' : (analysisResults.rentalStats.businessCase?.totalSavings || 0).toFixed(0).toLocaleString()} kr
-                </div>
-                <p className="text-green-300 text-sm">
-                  Forskellen mellem Scenario 1 og Scenario 2
-                </p>
-              </div>
-            </motion.div>
+            </div>
+          </div>
         </motion.div>
-      )}
 
     </div>
   )
