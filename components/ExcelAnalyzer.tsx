@@ -302,12 +302,14 @@ export default function ExcelAnalyzer() {
     let vacantWithRent = 0
 
     // Rental speed statistics
-    let rentalStats = {
+    let rentalStats: AnalysisResults['rentalStats'] = {
       noVacancy: 0, // <= 98 days
       withVacancy: 0, // > 98 days
       total: 0,
       averageDaysNoVacancy: 0,
-      averageDaysWithVacancy: 0
+      averageDaysWithVacancy: 0,
+      segments: undefined,
+      businessCase: undefined
     }
     let totalDaysNoVacancy = 0
     let totalDaysWithVacancy = 0
@@ -1063,7 +1065,7 @@ export default function ExcelAnalyzer() {
                   {analysisResults.rentalStats.withVacancy}
                 </div>
                 <div className="text-gray-400 text-xs mb-2">
-                  Lejligheder med tomgang (>98 dage)
+                  Lejligheder med tomgang (&gt;98 dage)
                 </div>
                 <div className="text-sm text-red-400">
                   Gennemsnit: {analysisResults.rentalStats.averageDaysWithVacancy} dage
@@ -1125,12 +1127,12 @@ export default function ExcelAnalyzer() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={[
                       { month: '0 måneder', loss: 0 },
-                      { month: '1 måned', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.17 },
-                      { month: '2 måneder', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.33 },
-                      { month: '3 måneder', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.5 },
-                      { month: '4 måneder', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.67 },
-                      { month: '5 måneder', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.83 },
-                      { month: '6 måneder', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss }
+                      { month: '1 måned', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.17 },
+                      { month: '2 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.33 },
+                      { month: '3 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.5 },
+                      { month: '4 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.67 },
+                      { month: '5 måneder', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.83 },
+                      { month: '6 måneder', loss: analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0 }
                     ]}>
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(156, 163, 175, 0.1)" />
                       <XAxis dataKey="month" tick={{ fill: '#9CA3AF', fontSize: 12 }} axisLine={{ stroke: 'rgba(156, 163, 175, 0.2)' }} />
@@ -1143,7 +1145,7 @@ export default function ExcelAnalyzer() {
                           backdropFilter: 'blur(10px)',
                           color: 'white'
                         }}
-                        formatter={(value) => [`-${value >= 1000000 ? `${(value/1000000).toFixed(1)}M` : `${(value/1000).toFixed(0)}k`} kr`, 'Tabt leje']}
+                        formatter={(value) => [`-${(value as number) >= 1000000 ? `${((value as number)/1000000).toFixed(1)}M` : `${((value as number)/1000).toFixed(0)}k`} kr`, 'Tabt leje']}
                       />
                       <Line type="monotone" dataKey="loss" stroke="#ef4444" strokeWidth={3} dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }} />
                     </LineChart>
@@ -1155,12 +1157,12 @@ export default function ExcelAnalyzer() {
               <div className="space-y-3">
                 {[
                   { month: '0 måneder', label: 'Ingen tab endnu', loss: 0 },
-                  { month: '1 måned', label: 'Første måned tabt', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.17 },
-                  { month: '2 måneder', label: 'Tab fordoblet', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.33 },
-                  { month: '3 måneder', label: 'Kvartals tab', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.5 },
-                  { month: '4 måneder', label: 'Signifikant tab', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.67 },
-                  { month: '5 måneder', label: 'Høj påvirkning', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss * 0.83 },
-                  { month: '6 måneder', label: 'Halvårs tab', loss: analysisResults.rentalStats.businessCase.scenario1TotalLoss }
+                  { month: '1 måned', label: 'Første måned tabt', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.17 },
+                  { month: '2 måneder', label: 'Tab fordoblet', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.33 },
+                  { month: '3 måneder', label: 'Kvartals tab', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.5 },
+                  { month: '4 måneder', label: 'Signifikant tab', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.67 },
+                  { month: '5 måneder', label: 'Høj påvirkning', loss: (analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0) * 0.83 },
+                  { month: '6 måneder', label: 'Halvårs tab', loss: analysisResults.rentalStats.businessCase?.scenario1TotalLoss || 0 }
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -1179,7 +1181,7 @@ export default function ExcelAnalyzer() {
                     <div className="w-full bg-gray-700/50 rounded-full h-2">
                       <div 
                         className="bg-red-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${analysisResults.rentalStats.businessCase.scenario1TotalLoss > 0 ? (item.loss / analysisResults.rentalStats.businessCase.scenario1TotalLoss) * 100 : 0}%` }}
+                        style={{ width: `${analysisResults.rentalStats.businessCase?.scenario1TotalLoss && analysisResults.rentalStats.businessCase.scenario1TotalLoss > 0 ? (item.loss / analysisResults.rentalStats.businessCase.scenario1TotalLoss) * 100 : 0}%` }}
                       />
                     </div>
                     <p className="text-gray-500 text-xs mt-1">{analysisResults.rentalStats.total} lejligheder</p>
@@ -1224,20 +1226,20 @@ export default function ExcelAnalyzer() {
                       },
                       { 
                         month: '4 måneder', 
-                        loss: analysisResults.rentalStats.businessCase.scenario2LossMonth4, 
-                        properties: analysisResults.rentalStats.businessCase.propertiesMonth4 || 0,
+                        loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth4 || 0, 
+                        properties: analysisResults.rentalStats.businessCase?.propertiesMonth4 || 0,
                         label: 'Første tab efter 98 dage'
                       },
-                      { 
-                        month: '5 måneder', 
-                        loss: analysisResults.rentalStats.businessCase.scenario2LossMonth5, 
-                        properties: analysisResults.rentalStats.businessCase.propertiesMonth5 || 0,
+                      {
+                        month: '5 måneder',
+                        loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth5 || 0, 
+                        properties: analysisResults.rentalStats.businessCase?.propertiesMonth5 || 0,
                         label: 'Tab øger (121-150 dage)'
                       },
-                      { 
-                        month: '6 måneder', 
-                        loss: analysisResults.rentalStats.businessCase.scenario2TotalLoss, 
-                        properties: analysisResults.rentalStats.businessCase.propertiesWithVacancy || 0,
+                      {
+                        month: '6 måneder',
+                        loss: analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0, 
+                        properties: analysisResults.rentalStats.businessCase?.propertiesWithVacancy || 0,
                         label: 'Kontinuerligt tab (151-180 dage)'
                       }
                     ]}>
@@ -1253,7 +1255,7 @@ export default function ExcelAnalyzer() {
                           color: 'white'
                         }}
                         formatter={(value, name, props) => [
-                          `-${value >= 1000000 ? `${(value/1000000).toFixed(1)}M` : `${(value/1000).toFixed(0)}k`} kr`,
+                          `-${(value as number) >= 1000000 ? `${((value as number)/1000000).toFixed(1)}M` : `${((value as number)/1000).toFixed(0)}k`} kr`,
                           'Tabt leje'
                         ]}
                         labelFormatter={(label, payload) => {
@@ -1277,9 +1279,9 @@ export default function ExcelAnalyzer() {
                   { month: '1 måned', label: 'Grace period', loss: 0 },
                   { month: '2 måneder', label: 'Grace period', loss: 0 },
                   { month: '3 måneder', label: 'Grace period', loss: 0 },
-                  { month: '4 måneder', label: 'Første tab efter 98 dage', loss: analysisResults.rentalStats.businessCase.scenario2LossMonth4 },
-                  { month: '5 måneder', label: 'Tab øger (121-150 dage)', loss: analysisResults.rentalStats.businessCase.scenario2LossMonth5 },
-                  { month: '6 måneder', label: 'Kontinuerligt tab (151-180 dage)', loss: analysisResults.rentalStats.businessCase.scenario2TotalLoss }
+                  { month: '4 måneder', label: 'Første tab efter 98 dage', loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth4 || 0 },
+                  { month: '5 måneder', label: 'Tab øger (121-150 dage)', loss: analysisResults.rentalStats.businessCase?.scenario2LossMonth5 || 0 },
+                  { month: '6 måneder', label: 'Kontinuerligt tab (151-180 dage)', loss: analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0 }
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -1298,7 +1300,7 @@ export default function ExcelAnalyzer() {
                     <div className="w-full bg-gray-700/50 rounded-full h-2">
                       <div 
                         className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${analysisResults.rentalStats.businessCase.scenario2Loss > 0 ? (item.loss / analysisResults.rentalStats.businessCase.scenario2Loss) * 100 : 0}%` }}
+                        style={{ width: `${(analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 0) > 0 ? (item.loss / (analysisResults.rentalStats.businessCase?.scenario2TotalLoss || 1)) * 100 : 0}%` }}
                       />
                     </div>
                     <p className="text-gray-500 text-xs mt-1">{analysisResults.rentalStats.total} lejligheder</p>
@@ -1320,7 +1322,7 @@ export default function ExcelAnalyzer() {
                 <div className="text-center">
                   <h4 className="text-lg font-bold text-red-300 mb-2">🔴 Scenario 1 Net</h4>
                   <div className="text-3xl font-bold text-red-400 mb-2">
-                    {isNaN(analysisResults.rentalStats.businessCase.scenario1Net) ? '0' : analysisResults.rentalStats.businessCase.scenario1Net.toFixed(0).toLocaleString()} kr
+                    {isNaN(analysisResults.rentalStats.businessCase?.scenario1Net || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario1Net || 0).toFixed(0).toLocaleString()} kr
                   </div>
                   <p className="text-red-300 text-sm">
                     Kun tab - ingen indtægt
@@ -1333,7 +1335,7 @@ export default function ExcelAnalyzer() {
                 <div className="text-center">
                   <h4 className="text-lg font-bold text-blue-300 mb-2">🟡 Scenario 2 Indtægt</h4>
                   <div className="text-3xl font-bold text-blue-400 mb-2">
-                    +{isNaN(analysisResults.rentalStats.businessCase.scenario2MonthlyRevenue) ? '0' : analysisResults.rentalStats.businessCase.scenario2MonthlyRevenue.toFixed(0).toLocaleString()} kr
+                    +{isNaN(analysisResults.rentalStats.businessCase?.scenario2MonthlyRevenue || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario2MonthlyRevenue || 0).toFixed(0).toLocaleString()} kr
                   </div>
                   <p className="text-blue-300 text-sm">
                     6 måneders lejeindtægt (239k/måned)
@@ -1346,7 +1348,7 @@ export default function ExcelAnalyzer() {
                 <div className="text-center">
                   <h4 className="text-lg font-bold text-green-300 mb-2">🟡 Scenario 2 Net</h4>
                   <div className="text-3xl font-bold text-green-400 mb-2">
-                    +{isNaN(analysisResults.rentalStats.businessCase.scenario2Net) ? '0' : analysisResults.rentalStats.businessCase.scenario2Net.toFixed(0).toLocaleString()} kr
+                    +{isNaN(analysisResults.rentalStats.businessCase?.scenario2Net || 0) ? '0' : (analysisResults.rentalStats.businessCase?.scenario2Net || 0).toFixed(0).toLocaleString()} kr
                   </div>
                   <p className="text-green-300 text-sm">
                     Indtægt (1.4M) minus tab (97k)
@@ -1365,7 +1367,7 @@ export default function ExcelAnalyzer() {
               <div className="text-center">
                 <h4 className="text-xl font-bold text-green-300 mb-2">💰 Total Potentiel Besparelse</h4>
                 <div className="text-4xl font-bold text-green-400 mb-2">
-                  +{isNaN(analysisResults.rentalStats.businessCase.totalSavings) ? '0' : analysisResults.rentalStats.businessCase.totalSavings.toFixed(0).toLocaleString()} kr
+                  +{isNaN(analysisResults.rentalStats.businessCase?.totalSavings || 0) ? '0' : (analysisResults.rentalStats.businessCase?.totalSavings || 0).toFixed(0).toLocaleString()} kr
                 </div>
                 <p className="text-green-300 text-sm">
                   Forskellen mellem Scenario 1 og Scenario 2
