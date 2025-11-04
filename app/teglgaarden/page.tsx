@@ -87,10 +87,9 @@ export default function TeglgaardenPage() {
   // Array of videoer - add video paths here
   const videoer: string[] = [
     '/teglgaarden/videoer/9. 2. 4.mp4',
+    '/teglgaarden/videoer/Full.mp4',
     '/teglgaarden/videoer/Udeområde.mp4',
-    '/teglgaarden/videoer/Stigsborg full 9x16.mp4',
-    '/teglgaarden/videoer/Stigsborg kort 2 9x16.mp4',
-    '/teglgaarden/videoer/Stigsborg kort 9x16.mp4',
+    '/teglgaarden/videoer/Kort.mp4',
   ]
 
   // Array of annoncer - add announcements here
@@ -344,7 +343,7 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
         className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
       >
         <div className="w-full py-8">
-          <div className="flex items-center justify-between pr-12">
+          <div className="relative flex items-center justify-between pr-12">
             <div className="flex items-center space-x-8 pl-12">
               <div className="flex items-center space-x-4">
                 <Image
@@ -364,6 +363,16 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                 </button>
               </nav>
             </div>
+            <div className="absolute left-1/2 -translate-x-1/2">
+              <Image
+                src="/Teglgaarden.png"
+                alt="Teglgaarden"
+                width={300}
+                height={75}
+                className="h-12 w-auto object-contain"
+                priority
+              />
+            </div>
             <button
               onClick={() => {
                 localStorage.removeItem('teglgaarden_access')
@@ -380,28 +389,6 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
       {/* Main Content */}
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-8">
-          {/* Hero Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-20"
-          >
-            <div className="mb-4">
-              <Image
-                src="/Teglgaarden.png"
-                alt="Teglgaarden"
-                width={600}
-                height={150}
-                className="h-auto w-auto max-w-2xl object-contain"
-                priority
-              />
-            </div>
-            <p className="text-xl text-gray-500 font-light max-w-2xl">
-              Oversigt over tiltag, videoer og annoncer
-            </p>
-          </motion.div>
-
           {/* Tiltag Section */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -409,33 +396,34 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
             transition={{ delay: 0.2 }}
             className="mb-24"
           >
-            <div className="flex items-center space-x-3 mb-12">
-              <CheckCircle2 className="w-6 h-6 text-gray-900" />
-              <h2 className="text-3xl font-light text-gray-900">Tiltag</h2>
+            <div className="mb-16">
+              <div className="bg-gray-900 rounded-lg px-4 py-2 inline-block">
+                <h2 className="text-3xl font-bold text-white">Tiltag</h2>
+              </div>
             </div>
 
             {/* Faste Tiltag Hver Uge */}
             <div className="mb-20">
-              <h3 className="text-xl font-light text-gray-700 mb-10">Faste tiltag hver uge</h3>
+              <h3 className="text-base font-semibold text-gray-600 mb-10">Faste tiltag hver uge</h3>
               <div className="grid md:grid-cols-3 gap-8">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-300 hover:shadow-lg transition-all bg-white group shadow-sm"
+                  className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 hover:shadow-md transition-all bg-white group"
                 >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <Megaphone className="w-6 h-6 text-gray-700" />
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                      <Megaphone className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
                     Annoncering på sociale medier
                   </h4>
-                  <p className="text-base text-gray-600 font-light leading-relaxed mb-4">
+                  <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Annoncering på sociale medier hver dag
                   </p>
-                  <div className="text-sm text-gray-500 font-light">
+                  <div className="text-xs text-gray-400 font-light">
                     Gentages dagligt
                   </div>
                 </motion.div>
@@ -444,20 +432,20 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-300 hover:shadow-lg transition-all bg-white group shadow-sm"
+                  className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 hover:shadow-md transition-all bg-white group"
                 >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <CheckCircle2 className="w-6 h-6 text-gray-700" />
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                      <CheckCircle2 className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
                     Åbent hus
                   </h4>
-                  <p className="text-base text-gray-600 font-light leading-relaxed mb-4">
+                  <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Åbent hus fra 09-17 hver onsdag
                   </p>
-                  <div className="text-sm text-gray-500 font-light">
+                  <div className="text-xs text-gray-400 font-light">
                     Hver onsdag
                   </div>
                 </motion.div>
@@ -466,20 +454,20 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-300 hover:shadow-lg transition-all bg-white group shadow-sm"
+                  className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 hover:shadow-md transition-all bg-white group"
                 >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <CheckCircle2 className="w-6 h-6 text-gray-700" />
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                      <CheckCircle2 className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
                     Åbent hus
                   </h4>
-                  <p className="text-base text-gray-600 font-light leading-relaxed mb-4">
+                  <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Åbent hus fra 11-13 hver søndag
                   </p>
-                  <div className="text-sm text-gray-500 font-light">
+                  <div className="text-xs text-gray-400 font-light">
                     Hver søndag
                   </div>
                 </motion.div>
@@ -488,29 +476,29 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
 
             {/* Ekstra Tiltag I November */}
             <div>
-              <h3 className="text-xl font-light text-gray-700 mb-10">Ekstra tiltag i november</h3>
+              <h3 className="text-base font-semibold text-gray-600 mb-10">Ekstra tiltag i november</h3>
               <div className="grid md:grid-cols-2 gap-8">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-300 hover:shadow-lg transition-all bg-white group shadow-sm"
+                  className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 hover:shadow-md transition-all bg-white group"
                 >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <CheckCircle2 className="w-6 h-6 text-gray-700" />
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                      <CheckCircle2 className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
                     Stort åbent hus
                   </h4>
-                  <p className="text-base text-gray-600 font-light leading-relaxed mb-3">
+                  <p className="text-sm text-gray-600 font-light leading-relaxed mb-2">
                     Stort åbent hus fra 10-13
                   </p>
-                  <p className="text-lg text-gray-900 font-semibold mb-4">
+                  <p className="text-base text-gray-900 font-medium mb-3">
                     09-11-2025
                   </p>
-                  <p className="text-sm text-gray-500 font-light">
+                  <p className="text-xs text-gray-400 font-light">
                     Boller og kaffe fra Surdejsbageren
                   </p>
                 </motion.div>
@@ -519,23 +507,23 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
-                  className="border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-300 hover:shadow-lg transition-all bg-white group shadow-sm"
+                  className="border border-gray-200 rounded-xl p-8 hover:border-gray-300 hover:shadow-md transition-all bg-white group"
                 >
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                      <CheckCircle2 className="w-6 h-6 text-gray-700" />
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                      <CheckCircle2 className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
                     Stort åbent hus
                   </h4>
-                  <p className="text-base text-gray-600 font-light leading-relaxed mb-3">
+                  <p className="text-sm text-gray-600 font-light leading-relaxed mb-2">
                     Stort åbent hus fra 10-13
                   </p>
-                  <p className="text-lg text-gray-900 font-semibold mb-4">
+                  <p className="text-base text-gray-900 font-medium mb-3">
                     16-11-2025
                   </p>
-                  <p className="text-sm text-gray-500 font-light">
+                  <p className="text-xs text-gray-400 font-light">
                     Boller og kaffe fra Surdejsbageren
                   </p>
                 </motion.div>
@@ -550,9 +538,11 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
             transition={{ delay: 0.4 }}
             className="mb-24"
           >
-            <div className="flex items-center space-x-3 mb-12">
-              <Play className="w-6 h-6 text-gray-900" />
-              <h2 className="text-3xl font-light text-gray-900">Videoer</h2>
+            <div className="mb-16">
+              <div className="bg-gray-900 rounded-lg px-4 py-2 inline-flex items-center space-x-2">
+                <Play className="w-5 h-5 text-white" />
+                <h2 className="text-3xl font-bold text-white">Videoer</h2>
+              </div>
             </div>
             
             {videoer.length > 0 ? (
@@ -593,7 +583,9 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                     Videoen kan ikke afspilles
                                   </p>
                                   <p className="text-xs text-gray-600 mb-4">
-                                    .MOV filer virker ikke i Chrome på Windows. Prøv Edge eller konverter til .mp4.
+                                    {videoPath.includes('.MOV') || videoPath.includes('.mov') 
+                                      ? '.MOV filer virker ikke i Chrome på Windows. Prøv Edge eller konverter til .mp4.'
+                                      : 'Videoen mangler video-indhold (kun lyd). Prøv at konvertere videoen igen eller brug en anden fil.'}
                                   </p>
                                   <button
                                     onClick={() => {
@@ -616,6 +608,63 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                   onError={(e) => {
                                     console.error('Video playback error:', e)
                                     setVideoErrors(prev => ({ ...prev, [videoPath]: true }))
+                                  }}
+                                  onLoadedMetadata={(e) => {
+                                    const video = e.currentTarget
+                                    // Check if video has valid video dimensions (not just audio)
+                                    if (video.videoWidth === 0 || video.videoHeight === 0) {
+                                      console.error('Video has no video track (audio only):', videoPath)
+                                      setVideoErrors(prev => ({ ...prev, [videoPath]: true }))
+                                    }
+                                  }}
+                                  onLoadedData={(e) => {
+                                    const video = e.currentTarget
+                                    // Double check after data is loaded
+                                    setTimeout(() => {
+                                      if (video.videoWidth === 0 || video.videoHeight === 0) {
+                                        console.error('Video has no video track after load:', videoPath)
+                                        setVideoErrors(prev => ({ ...prev, [videoPath]: true }))
+                                      } else {
+                                        // Check if video is playing but black (possible codec issue)
+                                        // Try to draw a frame to canvas to test if video renders
+                                        try {
+                                          const canvas = document.createElement('canvas')
+                                          canvas.width = video.videoWidth
+                                          canvas.height = video.videoHeight
+                                          const ctx = canvas.getContext('2d')
+                                          if (ctx) {
+                                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+                                            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+                                            const pixels = imageData.data
+                                            // Check if image is completely black (all pixels are 0 or very dark)
+                                            let nonBlackPixels = 0
+                                            for (let i = 0; i < pixels.length; i += 4) {
+                                              const r = pixels[i]
+                                              const g = pixels[i + 1]
+                                              const b = pixels[i + 2]
+                                              if (r > 10 || g > 10 || b > 10) {
+                                                nonBlackPixels++
+                                              }
+                                            }
+                                            // If less than 1% of pixels are non-black, video is likely just black
+                                            const totalPixels = (canvas.width * canvas.height)
+                                            if (nonBlackPixels < totalPixels * 0.01 && video.readyState >= 2) {
+                                              console.warn('Video appears to be black screen:', videoPath)
+                                              // Don't set error immediately - wait a bit to see if it's just a loading issue
+                                            }
+                                          }
+                                        } catch (err) {
+                                          console.error('Error checking video frame:', err)
+                                        }
+                                      }
+                                    }, 1000)
+                                  }}
+                                  onTimeUpdate={(e) => {
+                                    // Additional check during playback
+                                    const video = e.currentTarget
+                                    if (video.readyState >= 2 && (video.videoWidth === 0 || video.videoHeight === 0)) {
+                                      setVideoErrors(prev => ({ ...prev, [videoPath]: true }))
+                                    }
                                   }}
                                 >
                                   <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
@@ -733,9 +782,11 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
             transition={{ delay: 0.6 }}
             className="mb-24"
           >
-            <div className="flex items-center space-x-3 mb-12">
-              <Home className="w-6 h-6 text-gray-900" />
-              <h2 className="text-3xl font-light text-gray-900">Boligbilleder</h2>
+            <div className="mb-16">
+              <div className="bg-gray-900 rounded-lg px-4 py-2 inline-flex items-center space-x-2">
+                <ImageIcon className="w-5 h-5 text-white" />
+                <h2 className="text-3xl font-bold text-white">Boligbilleder</h2>
+              </div>
             </div>
             
             {boliger.length > 0 ? (
@@ -854,9 +905,11 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
             transition={{ delay: 0.8 }}
             className="mb-24"
           >
-            <div className="flex items-center space-x-3 mb-12">
-              <Megaphone className="w-6 h-6 text-gray-900" />
-              <h2 className="text-3xl font-light text-gray-900">Annoncer</h2>
+            <div className="mb-16">
+              <div className="bg-gray-900 rounded-lg px-4 py-2 inline-flex items-center space-x-2">
+                <Megaphone className="w-5 h-5 text-white" />
+                <h2 className="text-3xl font-bold text-white">Annoncer</h2>
+              </div>
             </div>
             
             {annoncer.length > 0 && (
