@@ -28,9 +28,25 @@ export default function Home() {
 
   const handleAuthSuccess = (e: React.FormEvent) => {
     e.preventDefault()
-    if (code === 'dmudlejning2025') {
+    
+    // Define password-to-route mapping
+    const passwordRoutes: { [key: string]: string } = {
+      'dmudlejning2025': 'home', // Main landing page
+      'Lykkebo2025': 'analyse', // Analysis page
+      'Teglgaarden2025': 'teglgaarden', // Teglgaarden project page
+    }
+    
+    const route = passwordRoutes[code]
+    
+    if (route === 'home') {
       localStorage.setItem('kunder_authenticated', 'true')
       setIsAuthenticated(true)
+    } else if (route === 'analyse') {
+      localStorage.setItem('analysis_access', 'true')
+      window.location.href = '/analyse'
+    } else if (route === 'teglgaarden') {
+      localStorage.setItem('teglgaarden_access', 'true')
+      window.location.href = '/teglgaarden'
     } else {
       alert('Forkert adgangskode. Prøv igen.')
     }
