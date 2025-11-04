@@ -95,85 +95,90 @@ export default function Home() {
 
             {/* Main Heading */}
             <h1 className="text-4xl font-bold mb-6">
-              Fremvisning<br />
-              Effektivisering<br />
-              Optimering
+              Teglgaarden<br />
+              på Stigsborg
             </h1>
             
             {/* Description */}
             <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-              Vi hjælper ejendomsejere og investorer med at få udlejet deres lejemål - hurtigere og ekstremt effektivt. 
-              Resultat: <span className="text-white font-semibold">1.785 aktive lejemål</span> - 
-              <span className="text-2xl font-black text-white"> 0,22% tomgang!</span>
+              <span className="text-white font-semibold text-xl">Nye lejeboliger hvor kvalitet og varme mødes</span>
             </p>
 
             {/* Features Grid */}
             <div className="grid grid-cols-2 gap-6 mb-8 justify-items-center">
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-lg">📸</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1">Markedsføring</h3>
-                  <p className="text-gray-400 text-xs">Billeder og video</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-lg">👥</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm mb-1">Stor kundegruppe</h3>
-                  <p className="text-gray-400 text-xs">På sociale medier og lejekartotek</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-lg">🏠</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm mb-1">Fremvisning</h3>
-                  <p className="text-gray-400 text-xs">Professionel præsentation af dine lejemål</p>
+                  <h3 className="font-semibold text-sm mb-1">Moderne boliger</h3>
+                  <p className="text-gray-400 text-xs">Lyse boliger med plantegninger</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-lg">⚡</span>
+                  <span className="text-lg">🌿</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm mb-1">Effektivisering</h3>
-                  <p className="text-gray-400 text-xs">Strømlinede processer for maksimal effektivitet</p>
+                  <h3 className="font-semibold text-sm mb-1">Fællesfaciliteter</h3>
+                  <p className="text-gray-400 text-xs">Fællesrum og byliv</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-lg">📊</span>
+                  <span className="text-lg">📍</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm mb-1">Optimering</h3>
-                  <p className="text-gray-400 text-xs">Data-drevet optimering af lejemål</p>
+                  <h3 className="font-semibold text-sm mb-1">Stigsborg Parkvej</h3>
+                  <p className="text-gray-400 text-xs">Perfekt placering</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-lg">🎯</span>
+                  <span className="text-lg">🧑‍🤝‍🧑</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm mb-1">Resultater</h3>
-                  <p className="text-gray-400 text-xs">1.785 aktive lejemål - 0,22% tomgang</p>
+                  <h3 className="font-semibold text-sm mb-1">Fællesskab</h3>
+                  <p className="text-gray-400 text-xs">Byggeri med omtanke</p>
                 </div>
               </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">🏢</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">A. Enggaard A/S</h3>
+                  <p className="text-gray-400 text-xs">Erfaren bygherre</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg">📋</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">Planer og priser</h3>
+                  <p className="text-gray-400 text-xs">Se alle lejligheder</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div className="text-center space-y-2 mb-4">
+              <p className="text-white font-semibold text-lg">Ring til os</p>
+              <a href="tel:72170008" className="text-gray-300 text-lg hover:text-white transition-colors">
+                72 17 00 08
+              </a>
             </div>
 
             {/* Status */}
             <div className="flex items-center justify-center space-x-2">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-300">Aktiv system - Altid opdateret</span>
+              <span className="text-sm text-gray-300">Klar til indflytning</span>
             </div>
           </motion.div>
         </div>

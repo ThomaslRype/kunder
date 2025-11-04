@@ -342,9 +342,9 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
         transition={{ duration: 0.6 }}
         className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
       >
-        <div className="w-full py-6">
-          <div className="flex items-center justify-between pr-8">
-            <div className="flex items-center space-x-8 pl-0">
+        <div className="w-full py-8">
+          <div className="flex items-center justify-between pr-12">
+            <div className="flex items-center space-x-8 pl-12">
               <div className="flex items-center space-x-4">
                 <Image
                   src="/logo.png"
@@ -353,7 +353,7 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   height={48}
                   className="h-10 w-auto object-contain"
                 />
-                <p className="text-sm font-light text-gray-600 whitespace-nowrap">
+                <p className="text-base font-medium text-gray-700 whitespace-nowrap">
                   Din udlejningmaegler / Din Mægler
                 </p>
               </div>
@@ -377,7 +377,7 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
       </motion.header>
 
       {/* Main Content */}
-      <main className="pt-24 pb-20">
+      <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-8">
           {/* Hero Section */}
           <motion.div
@@ -386,9 +386,16 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
             transition={{ delay: 0.1 }}
             className="mb-20"
           >
-            <h1 className="text-5xl md:text-6xl font-light text-gray-900 mb-4 tracking-tight">
-              Teglgaarden
-            </h1>
+            <div className="mb-4">
+              <Image
+                src="/Teglgaarden.png"
+                alt="Teglgaarden"
+                width={600}
+                height={150}
+                className="h-auto w-auto max-w-2xl object-contain"
+                priority
+              />
+            </div>
             <p className="text-xl text-gray-500 font-light max-w-2xl">
               Oversigt over tiltag, videoer og annoncer
             </p>
@@ -582,9 +589,17 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                 src={videoPath}
                                 controls
                                 autoPlay
+                                playsInline
                                 className="w-full h-full object-contain rounded-2xl bg-black"
                                 onEnded={() => setPlayingVideo(null)}
-                              />
+                                onError={(e) => {
+                                  console.error('Video playback error:', e)
+                                  setPlayingVideo(null)
+                                }}
+                              >
+                                <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
+                                Din browser understøtter ikke video-afspilning.
+                              </video>
                             ) : (
                               <>
                                 {videoThumbnails[videoPath] ? (
@@ -614,7 +629,13 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                       className="w-full h-full object-cover opacity-0 rounded-2xl pointer-events-none"
                                       preload="metadata"
                                       muted
-                                    />
+                                      playsInline
+                                      onError={(e) => {
+                                        console.error('Video thumbnail generation error:', e)
+                                      }}
+                                    >
+                                      <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
+                                    </video>
                                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center cursor-pointer rounded-2xl"
                                       onClick={() => setPlayingVideo(videoPath)}
                                     >
