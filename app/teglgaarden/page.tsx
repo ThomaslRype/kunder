@@ -14,6 +14,7 @@ export default function TeglgaardenPage() {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
   const [videoThumbnails, setVideoThumbnails] = useState<{ [key: string]: string }>({})
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const [videoErrors, setVideoErrors] = useState<{ [key: string]: boolean }>({})
   const router = useRouter()
 
   const generateThumbnail = (videoPath: string, videoElement: HTMLVideoElement) => {
@@ -60,6 +61,7 @@ export default function TeglgaardenPage() {
     const clampedIndex = Math.min(newIndex, maxIndex)
     setCurrentVideoIndex(clampedIndex)
     setPlayingVideo(null) // Stop playing video when changing
+    setVideoErrors({}) // Reset video errors when changing
   }
   
   const handleNextVideo = () => {
@@ -84,12 +86,11 @@ export default function TeglgaardenPage() {
 
   // Array of videoer - add video paths here
   const videoer: string[] = [
-    '/teglgaarden/videoer/9.2.4.MOV',
-    '/teglgaarden/videoer/Udeområde.MOV',
+    '/teglgaarden/videoer/9. 2. 4.mp4',
+    '/teglgaarden/videoer/Udeområde.mp4',
     '/teglgaarden/videoer/Stigsborg full 9x16.mp4',
     '/teglgaarden/videoer/Stigsborg kort 2 9x16.mp4',
     '/teglgaarden/videoer/Stigsborg kort 9x16.mp4',
-    '/teglgaarden/videoer/TG Højformat.mp4',
   ]
 
   // Array of annoncer - add announcements here
@@ -585,21 +586,42 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                         >
                           <div className="aspect-[9/16] relative bg-gray-50 overflow-hidden w-full rounded-2xl">
                             {playingVideo === videoPath ? (
-                              <video
-                                src={videoPath}
-                                controls
-                                autoPlay
-                                playsInline
-                                className="w-full h-full object-contain rounded-2xl bg-black"
-                                onEnded={() => setPlayingVideo(null)}
-                                onError={(e) => {
-                                  console.error('Video playback error:', e)
-                                  setPlayingVideo(null)
-                                }}
-                              >
-                                <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
-                                Din browser understøtter ikke video-afspilning.
-                              </video>
+                              videoErrors[videoPath] ? (
+                                <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 rounded-2xl p-6 text-center">
+                                  <div className="text-4xl mb-4">⚠️</div>
+                                  <p className="text-sm font-semibold text-gray-900 mb-2">
+                                    Videoen kan ikke afspilles
+                                  </p>
+                                  <p className="text-xs text-gray-600 mb-4">
+                                    .MOV filer virker ikke i Chrome på Windows. Prøv Edge eller konverter til .mp4.
+                                  </p>
+                                  <button
+                                    onClick={() => {
+                                      setPlayingVideo(null)
+                                      setVideoErrors(prev => ({ ...prev, [videoPath]: false }))
+                                    }}
+                                    className="px-4 py-2 bg-gray-900 text-white text-xs rounded-lg hover:bg-gray-800 transition-colors"
+                                  >
+                                    Luk
+                                  </button>
+                                </div>
+                              ) : (
+                                <video
+                                  src={videoPath}
+                                  controls
+                                  autoPlay
+                                  playsInline
+                                  className="w-full h-full object-contain rounded-2xl bg-black"
+                                  onEnded={() => setPlayingVideo(null)}
+                                  onError={(e) => {
+                                    console.error('Video playback error:', e)
+                                    setVideoErrors(prev => ({ ...prev, [videoPath]: true }))
+                                  }}
+                                >
+                                  <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
+                                  Din browser understøtter ikke video-afspilning.
+                                </video>
+                              )
                             ) : (
                               <>
                                 {videoThumbnails[videoPath] ? (
@@ -610,7 +632,10 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                       className="w-full h-full object-cover rounded-2xl"
                                     />
                                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center cursor-pointer rounded-2xl group-hover:bg-black/10 transition-colors"
-                                      onClick={() => setPlayingVideo(videoPath)}
+                                      onClick={() => {
+                                        setPlayingVideo(videoPath)
+                                        setVideoErrors(prev => ({ ...prev, [videoPath]: false }))
+                                      }}
                                     >
                                       <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-transform shadow-lg">
                                         <Play className="w-6 h-6 text-gray-900 ml-1" />
@@ -637,7 +662,10 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                                       <source src={videoPath} type={videoPath.endsWith('.MOV') || videoPath.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
                                     </video>
                                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center cursor-pointer rounded-2xl"
-                                      onClick={() => setPlayingVideo(videoPath)}
+                                      onClick={() => {
+                                        setPlayingVideo(videoPath)
+                                        setVideoErrors(prev => ({ ...prev, [videoPath]: false }))
+                                      }}
                                     >
                                       <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-transform">
                                         <Play className="w-6 h-6 text-gray-900 ml-1" />
