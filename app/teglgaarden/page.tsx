@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Play, Image as ImageIcon, Megaphone, CheckCircle2, Home, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, ExternalLink } from 'lucide-react'
+import { Play, Image as ImageIcon, Megaphone, CheckCircle2, Home, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, ExternalLink, MessageSquare, Send } from 'lucide-react'
 
 export default function TeglgaardenPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -15,6 +15,8 @@ export default function TeglgaardenPage() {
   const [videoThumbnails, setVideoThumbnails] = useState<{ [key: string]: string }>({})
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [videoErrors, setVideoErrors] = useState<{ [key: string]: boolean }>({})
+  const [comments, setComments] = useState<{ [key: string]: Array<{ text: string; timestamp: number }> }>({})
+  const [commentInputs, setCommentInputs] = useState<{ [key: string]: string }>({})
   const router = useRouter()
 
   const generateThumbnail = (videoPath: string, videoElement: HTMLVideoElement) => {
@@ -306,6 +308,56 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
     }
   ]
 
+  // Load comments from localStorage
+  useEffect(() => {
+    const savedComments = localStorage.getItem('teglgaarden_comments')
+    if (savedComments) {
+      try {
+        setComments(JSON.parse(savedComments))
+      } catch (e) {
+        console.error('Error loading comments:', e)
+      }
+    }
+  }, [])
+
+  // Save comments to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('teglgaarden_comments', JSON.stringify(comments))
+  }, [comments])
+
+  const addComment = (tiltagId: string) => {
+    const commentText = commentInputs[tiltagId]?.trim()
+    if (!commentText) return
+
+    const newComment = {
+      text: commentText,
+      timestamp: Date.now()
+    }
+
+    setComments(prev => ({
+      ...prev,
+      [tiltagId]: [...(prev[tiltagId] || []), newComment]
+    }))
+
+    setCommentInputs(prev => ({
+      ...prev,
+      [tiltagId]: ''
+    }))
+  }
+
+  const deleteComment = (tiltagId: string, commentIndex: number) => {
+    setComments(prev => {
+      const updatedComments = { ...prev }
+      if (updatedComments[tiltagId]) {
+        updatedComments[tiltagId] = updatedComments[tiltagId].filter((_, idx) => idx !== commentIndex)
+        if (updatedComments[tiltagId].length === 0) {
+          delete updatedComments[tiltagId]
+        }
+      }
+      return updatedComments
+    })
+  }
+
   useEffect(() => {
     // Check if user has access to teglgaarden page
     const hasAccess = localStorage.getItem('teglgaarden_access')
@@ -340,28 +392,25 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100"
+        className="fixed top-0 left-0 right-0 z-50 bg-[#662211] backdrop-blur-sm border-b border-[#551a0a]"
       >
         <div className="w-full py-8">
           <div className="relative flex items-center justify-between pr-12">
             <div className="flex items-center space-x-8 pl-12">
               <div className="flex items-center space-x-4">
-                <Image
-                  src="/logo.png"
-                  alt="Kunder Logo"
-                  width={150}
-                  height={48}
-                  className="h-10 w-auto object-contain"
-                />
-                <p className="text-base font-medium text-gray-700 whitespace-nowrap">
-                  Din udlejningmaegler / Din Mægler
+                <div className="relative" style={{ mixBlendMode: 'screen' }}>
+                  <Image
+                    src="/Logo-dmudlejning.png"
+                    alt="Kunder Logo"
+                    width={200}
+                    height={64}
+                    className="h-14 w-auto object-contain"
+                  />
+                </div>
+                <p className="text-base font-medium text-white whitespace-nowrap">
+                  Din Udlejningsmægler - Din Mægler
                 </p>
               </div>
-              <nav className="hidden md:flex items-center space-x-1">
-                <button className="px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                  Oversigt
-                </button>
-              </nav>
             </div>
             <div className="absolute left-1/2 -translate-x-1/2">
               <Image
@@ -378,7 +427,7 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                 localStorage.removeItem('teglgaarden_access')
                 router.push('/')
               }}
-              className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium text-white hover:bg-white/20 rounded-lg transition-colors"
             >
               Log ud
             </button>
@@ -423,8 +472,68 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Annoncering på sociale medier hver dag
                   </p>
-                  <div className="text-xs text-gray-400 font-light">
+                  <div className="text-xs text-gray-400 font-light mb-4">
                     Gentages dagligt
+                  </div>
+                  
+                  {/* Comments Section */}
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <MessageSquare className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-700">Kommentarer</span>
+                      {comments['tiltag-1'] && comments['tiltag-1'].length > 0 && (
+                        <span className="text-xs text-gray-500">({comments['tiltag-1'].length})</span>
+                      )}
+                    </div>
+                    
+                    {/* Existing Comments */}
+                    {comments['tiltag-1'] && comments['tiltag-1'].length > 0 && (
+                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                        {comments['tiltag-1'].map((comment, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-3 relative group">
+                            <button
+                              onClick={() => deleteComment('tiltag-1', idx)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded-full"
+                              aria-label="Slet kommentar"
+                            >
+                              <X className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <p className="text-sm text-gray-700 pr-6">{comment.text}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(comment.timestamp).toLocaleDateString('da-DK', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Comment Input */}
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={commentInputs['tiltag-1'] || ''}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, 'tiltag-1': e.target.value }))}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addComment('tiltag-1')
+                          }
+                        }}
+                        placeholder="Skriv en kommentar..."
+                        className="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
+                      />
+                      <button
+                        onClick={() => addComment('tiltag-1')}
+                        className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -445,8 +554,68 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Åbent hus fra 09-17 hver onsdag
                   </p>
-                  <div className="text-xs text-gray-400 font-light">
+                  <div className="text-xs text-gray-400 font-light mb-4">
                     Hver onsdag
+                  </div>
+                  
+                  {/* Comments Section */}
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <MessageSquare className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-700">Kommentarer</span>
+                      {comments['tiltag-2'] && comments['tiltag-2'].length > 0 && (
+                        <span className="text-xs text-gray-500">({comments['tiltag-2'].length})</span>
+                      )}
+                    </div>
+                    
+                    {/* Existing Comments */}
+                    {comments['tiltag-2'] && comments['tiltag-2'].length > 0 && (
+                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                        {comments['tiltag-2'].map((comment, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-3 relative group">
+                            <button
+                              onClick={() => deleteComment('tiltag-2', idx)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded-full"
+                              aria-label="Slet kommentar"
+                            >
+                              <X className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <p className="text-sm text-gray-700 pr-6">{comment.text}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(comment.timestamp).toLocaleDateString('da-DK', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Comment Input */}
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={commentInputs['tiltag-2'] || ''}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, 'tiltag-2': e.target.value }))}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addComment('tiltag-2')
+                          }
+                        }}
+                        placeholder="Skriv en kommentar..."
+                        className="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
+                      />
+                      <button
+                        onClick={() => addComment('tiltag-2')}
+                        className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -467,8 +636,68 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   <p className="text-sm text-gray-600 font-light leading-relaxed mb-3">
                     Åbent hus fra 11-13 hver søndag
                   </p>
-                  <div className="text-xs text-gray-400 font-light">
+                  <div className="text-xs text-gray-400 font-light mb-4">
                     Hver søndag
+                  </div>
+                  
+                  {/* Comments Section */}
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <MessageSquare className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-700">Kommentarer</span>
+                      {comments['tiltag-3'] && comments['tiltag-3'].length > 0 && (
+                        <span className="text-xs text-gray-500">({comments['tiltag-3'].length})</span>
+                      )}
+                    </div>
+                    
+                    {/* Existing Comments */}
+                    {comments['tiltag-3'] && comments['tiltag-3'].length > 0 && (
+                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                        {comments['tiltag-3'].map((comment, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-3 relative group">
+                            <button
+                              onClick={() => deleteComment('tiltag-3', idx)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded-full"
+                              aria-label="Slet kommentar"
+                            >
+                              <X className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <p className="text-sm text-gray-700 pr-6">{comment.text}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(comment.timestamp).toLocaleDateString('da-DK', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Comment Input */}
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={commentInputs['tiltag-3'] || ''}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, 'tiltag-3': e.target.value }))}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addComment('tiltag-3')
+                          }
+                        }}
+                        placeholder="Skriv en kommentar..."
+                        className="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
+                      />
+                      <button
+                        onClick={() => addComment('tiltag-3')}
+                        className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               </div>
@@ -498,9 +727,69 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   <p className="text-base text-gray-900 font-medium mb-3">
                     09-11-2025
                   </p>
-                  <p className="text-xs text-gray-400 font-light">
+                  <p className="text-xs text-gray-400 font-light mb-4">
                     Boller og kaffe fra Surdejsbageren
                   </p>
+                  
+                  {/* Comments Section */}
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <MessageSquare className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-700">Kommentarer</span>
+                      {comments['tiltag-4'] && comments['tiltag-4'].length > 0 && (
+                        <span className="text-xs text-gray-500">({comments['tiltag-4'].length})</span>
+                      )}
+                    </div>
+                    
+                    {/* Existing Comments */}
+                    {comments['tiltag-4'] && comments['tiltag-4'].length > 0 && (
+                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                        {comments['tiltag-4'].map((comment, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-3 relative group">
+                            <button
+                              onClick={() => deleteComment('tiltag-4', idx)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded-full"
+                              aria-label="Slet kommentar"
+                            >
+                              <X className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <p className="text-sm text-gray-700 pr-6">{comment.text}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(comment.timestamp).toLocaleDateString('da-DK', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Comment Input */}
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={commentInputs['tiltag-4'] || ''}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, 'tiltag-4': e.target.value }))}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addComment('tiltag-4')
+                          }
+                        }}
+                        placeholder="Skriv en kommentar..."
+                        className="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
+                      />
+                      <button
+                        onClick={() => addComment('tiltag-4')}
+                        className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </motion.div>
 
                 <motion.div
@@ -523,9 +812,69 @@ Det er opdelt i tre sammenhængende huse: ét orangeri omgivet af grønne plante
                   <p className="text-base text-gray-900 font-medium mb-3">
                     16-11-2025
                   </p>
-                  <p className="text-xs text-gray-400 font-light">
+                  <p className="text-xs text-gray-400 font-light mb-4">
                     Boller og kaffe fra Surdejsbageren
                   </p>
+                  
+                  {/* Comments Section */}
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <MessageSquare className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-700">Kommentarer</span>
+                      {comments['tiltag-5'] && comments['tiltag-5'].length > 0 && (
+                        <span className="text-xs text-gray-500">({comments['tiltag-5'].length})</span>
+                      )}
+                    </div>
+                    
+                    {/* Existing Comments */}
+                    {comments['tiltag-5'] && comments['tiltag-5'].length > 0 && (
+                      <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                        {comments['tiltag-5'].map((comment, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-3 relative group">
+                            <button
+                              onClick={() => deleteComment('tiltag-5', idx)}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded-full"
+                              aria-label="Slet kommentar"
+                            >
+                              <X className="w-3 h-3 text-gray-600" />
+                            </button>
+                            <p className="text-sm text-gray-700 pr-6">{comment.text}</p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {new Date(comment.timestamp).toLocaleDateString('da-DK', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Comment Input */}
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={commentInputs['tiltag-5'] || ''}
+                        onChange={(e) => setCommentInputs(prev => ({ ...prev, 'tiltag-5': e.target.value }))}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            addComment('tiltag-5')
+                          }
+                        }}
+                        placeholder="Skriv en kommentar..."
+                        className="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-300"
+                      />
+                      <button
+                        onClick={() => addComment('tiltag-5')}
+                        className="px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        <Send className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </motion.div>
               </div>
             </div>
